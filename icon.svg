@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="110" fill="#2d6a4f"/>
+  <!-- White cross -->
+  <rect x="211" y="100" width="90" height="312" rx="20" fill="white"/>
+  <rect x="100" y="211" width="312" height="90" rx="20" fill="white"/>
+</svg>
