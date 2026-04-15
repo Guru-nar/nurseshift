@@ -4,13 +4,13 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title || "🔔 Promemoria", {
       body: data.body || "",
-      icon: data.icon || "/icon.svg",
-      badge: "/icon.svg",
+      icon: data.icon || "/nurseshift/icon.svg",
+      badge: "/nurseshift/icon.svg",
     })
   );
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  event.waitUntil(clients.openWindow("/"));
+  event.waitUntil(clients.openWindow("/nurseshift/"));
 });
