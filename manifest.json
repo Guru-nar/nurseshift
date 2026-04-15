@@ -1,8 +1,8 @@
 {
   "name": "NurseShift — Santushta Kumari",
-  "short_name": "Prova",
+  "short_name": "NurseShift",
   "description": "Gestione turni infermieristica",
-  "start_url": "/",
+  "start_url": "/nurseshift/",
   "display": "standalone",
   "background_color": "#2d6a4f",
   "theme_color": "#2d6a4f",
