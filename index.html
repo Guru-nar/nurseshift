@@ -467,7 +467,7 @@
             <div class="legend-item"><div class="legend-dot" style="background:var(--cat-altro-bg);color:var(--cat-altro)">A</div> Altro</div>
             <div class="legend-item"><div class="legend-dot" style="background:var(--cat-eb-bg);color:var(--cat-eb)">EB</div> Esami Bimbo</div>
             <div class="legend-item"><div class="legend-dot" style="background:var(--cat-eg-bg);color:var(--cat-eg)">EG</div> Esami Bimba</div>
-            <div class="legend-item"><div class="legend-dot" style="background:var(--cat-t-bg);color:var(--cat-t)">T</div> Tirocinio</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--cat-t-bg);color:var(--cat-t)">T</div> Turni Tirocinio</div>
             <div class="legend-item"><div class="legend-dot" style="background:var(--cat-v-bg);color:var(--cat-v)">V</div> Vacanze</div>
             <div class="legend-item"><div class="legend-dot" style="background:var(--cat-mi-bg);color:var(--cat-mi)">Mi</div> Missione</div>
           </div>
@@ -647,6 +647,11 @@ function loadFromFirebase() {
 }
 
 function saveData() {
+  // Protezione: non salvare se i turni sono vuoti (dati non ancora caricati)
+  if (!appData.shifts || Object.keys(appData.shifts).length === 0) {
+    console.warn('saveData bloccato: dati non ancora caricati');
+    return;
+  }
   localStorage.setItem('nursehift_data_v2', JSON.stringify(appData));
   setSyncStatus('syncing'); clearTimeout(saveTimeout);
   saveTimeout = setTimeout(async () => { try { await setDoc(DOC_REF, appData); setSyncStatus('synced'); } catch(e) { setSyncStatus('error'); } }, 800);
@@ -815,7 +820,7 @@ const CATS = [
   { id:'altro',   label:'📝 Altro',           badge:'A',  color:'var(--cat-altro)',  bg:'var(--cat-altro-bg)',  light:'var(--cat-altro-light)'  },
   { id:'eb',      label:'👦🏽 Esami Bimbo',     badge:'EB', color:'var(--cat-eb)',     bg:'var(--cat-eb-bg)',     light:'var(--cat-eb-light)'     },
   { id:'eg',      label:'👧🏽 Esami Bimba',     badge:'EG', color:'var(--cat-eg)',     bg:'var(--cat-eg-bg)',     light:'var(--cat-eg-light)'     },
-  { id:'t',       label:'🏥 Tirocinio',  badge:'T',  color:'var(--cat-t)',      bg:'var(--cat-t-bg)',      light:'var(--cat-t-light)'      },
+  { id:'t',       label:'🏥 Turni Tirocinio',  badge:'T',  color:'var(--cat-t)',      bg:'var(--cat-t-bg)',      light:'var(--cat-t-light)'      },
   { id:'v',       label:'🌴 Vacanze',          badge:'V',  color:'var(--cat-v)',      bg:'var(--cat-v-bg)',      light:'var(--cat-v-light)'      },
   { id:'mi',      label:'🎯 Missione',         badge:'Mi', color:'var(--cat-mi)',     bg:'var(--cat-mi-bg)',     light:'var(--cat-mi-light)'     },
 ];
