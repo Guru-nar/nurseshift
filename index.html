@@ -166,6 +166,8 @@
   .cat-note-del:hover { color: #ef4444; }
   .cat-empty { text-align: center; color: var(--text3); font-size: 13px; padding: 16px 0; }
   .day-badge-cat { font-size: 7px; font-weight: 800; border-radius: 3px; padding: 1px 3px; line-height: 1.4; }
+  .cal-day.has-content { background: var(--surface2); }
+  [data-theme="dark"] .cal-day.has-content { background: rgba(255,255,255,0.06); }
 
   /* ═══════════════════════════════════
      PROMEMORIA CARD — nuovo design
@@ -742,8 +744,9 @@ function renderCalendar() {
     // Badge categorie
     const catBadges = CATS.filter(cat => (appData.categoryNotes?.[key]?.[cat.id]||[]).length > 0)
       .map(cat => `<div class="day-badge day-badge-cat" style="background:${cat.bg};color:${cat.color}">${cat.badge}</div>`).join('');
+    const hasContent = catBadges.length > 0 || ua || hasRem;
     const el=document.createElement('div');
-    el.className='cal-day'+(shift?` shift-${shift}`:'')+( key===todayKey?' today':'')+( key===selectedDateKey?' selected':'');
+    el.className='cal-day'+(shift?` shift-${shift}`:(hasContent?' has-content':''))+( key===todayKey?' today':'')+( key===selectedDateKey?' selected':'');
     el.innerHTML=`<div class="day-num">${d}</div>${shift?`<div class="day-shift-label">${shift}</div>`:''}<div class="day-indicators">${catBadges}${ua?'<div class="day-badge day-badge-uscita">U</div>':''}${hasRem?'<div class="day-badge day-badge-rem">🔔</div>':''}</div>`;
     el.addEventListener('click',()=>openPanel(key)); container.appendChild(el);
   }
