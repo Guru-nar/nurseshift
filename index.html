@@ -513,8 +513,10 @@
     <button class="panel-close" id="panelClose">✕</button>
     <div class="panel-date" id="panelDate"></div>
     <div class="panel-day-name" id="panelDayName"></div>
+    <div id="shiftTirocinoSection" style="display:none">
     <div class="section-title">Turno</div>
     <div class="shift-selector" id="shiftSelector"></div>
+    </div>
     <div id="catSections"></div>
     <div class="notes-section">
       <div class="notes-section-header">
@@ -757,6 +759,7 @@ document.getElementById('tirocinoToggleBtn').addEventListener('click', () => {
   btn.style.background = tirocinoMode ? 'var(--cat-t-bg)' : 'var(--surface2)';
   btn.style.borderColor = tirocinoMode ? 'var(--cat-t)' : 'var(--border)';
   document.getElementById('tirocinoSection').style.display = tirocinoMode ? 'block' : 'none';
+  document.getElementById('shiftTirocinoSection').style.display = tirocinoMode ? 'block' : 'none';
   document.getElementById('riepilogoTirocinoSection').style.display = tirocinoMode ? 'block' : 'none';
   // Re-render panel if open
   if(selectedDateKey) { renderPanelNotes(selectedDateKey); }
