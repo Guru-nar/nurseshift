@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-<title>NurseShift — Santushta Kumari</title>
+<title>SyncIn</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="NurseShift">
+<meta name="apple-mobile-web-app-title" content="SyncIn">
 <meta name="theme-color" content="#2d6a4f">
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -121,6 +121,10 @@
   .uscita-note-del:hover { color: #ef4444; }
   .uscita-add-row { display: flex; gap: 6px; margin-top: 6px; }
   .uscita-empty { text-align: center; color: var(--text3); font-size: 13px; padding: 12px 0; }
+  .uscite-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .uscite-tab { flex: 1; padding: 8px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: var(--surface2); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all var(--transition); color: var(--text2); }
+  .uscite-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .uscite-passate-list { max-height: 300px; overflow-y: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
 
 
   /* ═══ CATEGORIE NOTE ═══ */
@@ -344,11 +348,24 @@
 <body>
 
 <header class="header">
-  <div class="logo">Nurse<span>Shift</span></div>
+  <div class="logo" style="display:flex;align-items:center;gap:8px;">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="28" height="28" rx="7" fill="var(--accent)"/>
+        <rect x="6" y="4" width="16" height="20" rx="3" fill="white" fill-opacity="0.15"/>
+        <rect x="8" y="6" width="12" height="16" rx="2" fill="white"/>
+        <rect x="10" y="9" width="8" height="1.5" rx="0.75" fill="var(--accent)"/>
+        <rect x="10" y="12" width="6" height="1.5" rx="0.75" fill="var(--accent)" opacity="0.6"/>
+        <rect x="10" y="15" width="7" height="1.5" rx="0.75" fill="var(--accent)" opacity="0.6"/>
+        <rect x="11" y="3" width="2" height="4" rx="1" fill="var(--accent)"/>
+        <rect x="15" y="3" width="2" height="4" rx="1" fill="var(--accent)"/>
+      </svg>
+      <span style="font-family:'DM Serif Display',serif;font-size:20px;letter-spacing:-0.5px;">Sync<span style="color:var(--accent)">In</span></span>
+    </div>
   <div class="header-right">
     <div class="sync-label"><span class="sync-dot synced" id="syncDot"></span><span class="sync-text" id="syncLabel">Sincronizzato</span></div>
     <button class="theme-btn" id="themeBtn">🌙</button>
-    <div class="avatar">SK</div>
+    <button id="tirocinoToggleBtn" title="Modalità Tirocinio" style="width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all var(--transition);">🏥</button>
+    
   </div>
 </header>
 
@@ -360,6 +377,7 @@
     <button class="notif-banner-dismiss" id="notifDismissBtn">✕</button>
   </div>
 
+  <div id="tirocinoSection" style="display:none">
   <div class="next-shift-banner">
     <div class="next-shift-info">
       <h3>Prossimo turno</h3>
@@ -368,6 +386,7 @@
       <div id="nextShiftHours" style="font-size:13px;color:var(--text3);margin-top:3px;"></div>
     </div>
     <div class="next-shift-badge" id="nextShiftBadge"></div>
+  </div>
   </div>
 
   <div class="calendar-card">
@@ -460,30 +479,30 @@
         <div class="card-header"><div class="card-title">🏷 Legenda</div></div>
         <div class="card-body">
           <div class="legend-list">
-            <div class="legend-item"><div class="legend-dot" style="background:var(--M-bg);color:var(--M)">M</div> Mattina</div>
-            <div class="legend-item"><div class="legend-dot" style="background:var(--P-bg);color:var(--P)">P</div> Pomeriggio</div>
-            <div class="legend-item"><div class="legend-dot" style="background:var(--N-bg);color:var(--N)">N</div> Notte</div>
-            <div class="legend-item"><div class="legend-dot" style="background:var(--SN-bg);color:var(--SN)">SN</div> Smonto Notte</div>
-            <div class="legend-item"><div class="legend-dot" style="background:var(--R-bg);color:var(--R)">R</div> Riposo</div>
             <div class="legend-item"><div class="legend-dot" style="background:var(--rem-bg);color:var(--rem)">🔔</div> Promemoria</div>
-            <div class="legend-item"><div class="legend-dot" style="background:var(--cat-altro-bg);color:var(--cat-altro)">A</div> Altro</div>
             <div class="legend-item"><div class="legend-dot" style="background:var(--cat-eb-bg);color:var(--cat-eb)">EB</div> Esami Bimbo</div>
             <div class="legend-item"><div class="legend-dot" style="background:var(--cat-eg-bg);color:var(--cat-eg)">EG</div> Esami Bimba</div>
-            <div class="legend-item"><div class="legend-dot" style="background:var(--cat-t-bg);color:var(--cat-t)">T</div> Tirocinio</div>
             <div class="legend-item"><div class="legend-dot" style="background:var(--cat-v-bg);color:var(--cat-v)">V</div> Vacanze</div>
-            <div class="legend-item"><div class="legend-dot" style="background:var(--cat-mi-bg);color:var(--cat-mi)">Mi</div> Missione</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--cat-mi-bg);color:var(--cat-mi)">M</div> Missione</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--cat-altro-bg);color:var(--cat-altro)">A</div> Altro</div>
+            <div class="legend-item legend-tirocinio" style="display:none"><div class="legend-dot" style="background:var(--M-bg);color:var(--M)">M</div> Mattina</div>
+            <div class="legend-item legend-tirocinio" style="display:none"><div class="legend-dot" style="background:var(--P-bg);color:var(--P)">P</div> Pomeriggio</div>
+            <div class="legend-item legend-tirocinio" style="display:none"><div class="legend-dot" style="background:var(--N-bg);color:var(--N)">N</div> Notte</div>
+            <div class="legend-item legend-tirocinio" style="display:none"><div class="legend-dot" style="background:var(--SN-bg);color:var(--SN)">SN</div> Smonto Notte</div>
+            <div class="legend-item legend-tirocinio" style="display:none"><div class="legend-dot" style="background:var(--R-bg);color:var(--R)">R</div> Riposo</div>
+            <div class="legend-item legend-tirocinio" style="display:none"><div class="legend-dot" style="background:var(--cat-t-bg);color:var(--cat-t)">T</div> Tirocinio</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="card">
+    <div id="riepilogoTirocinoSection" style="display:none"><div class="card">
       <div class="card-header"><div class="card-title">📊 Riepilogo mese</div><span id="statsMonth" style="font-size:12px;color:var(--text3)"></span></div>
       <div class="card-body">
         <div class="stats-grid" id="statsGrid"></div>
         <div class="month-bar" id="monthBar" style="margin-top:14px;"></div>
       </div>
-    </div>
+    </div></div>
   </div>
 
 </div>
@@ -594,7 +613,7 @@ async function initNotifications() {
 
 async function registerWebPush() {
   try {
-    const reg = await navigator.serviceWorker.register('/nurseshift/firebase-messaging-sw.js');
+    const reg = await navigator.serviceWorker.register('/nurseshift/firebase-messaging-sw.js', { scope: '/nurseshift/' });
     await navigator.serviceWorker.ready;
     let sub = await reg.pushManager.getSubscription();
     if (!sub) {
@@ -644,19 +663,27 @@ function loadFromFirebase() {
   onSnapshot(DOC_REF, (snap) => {
     if (snap.exists()) { const d=snap.data(); appData.shifts=d.shifts||{}; appData.notes=d.notes||{}; appData.uscite=d.uscite||{}; appData.uscitaActive=d.uscitaActive||{}; appData.categoryNotes=d.categoryNotes||{}; }
     else { appData={shifts:{},notes:{},uscite:{},uscitaActive:{},categoryNotes:{}}; for(const [d,s] of Object.entries(marchShifts)) appData.shifts[`2026-03-${String(d).padStart(2,'0')}`]=s; for(const [d,s] of Object.entries(aprilShifts)) appData.shifts[`2026-04-${String(d).padStart(2,'0')}`]=s; setDoc(DOC_REF,appData); }
-    setSyncStatus('synced'); renderCalendar();
+    _dataLoadedFromFirebase = true; setSyncStatus('synced'); renderCalendar();
   }, (err) => { setSyncStatus('error'); try{const r=localStorage.getItem('nursehift_data_v2');if(r){const p=JSON.parse(r);appData.shifts=p.shifts||{};appData.notes=p.notes||{};appData.uscite=p.uscite||{};appData.uscitaActive=p.uscitaActive||{};}}catch(_){} renderCalendar(); });
 }
 
+let _dataLoadedFromFirebase = false;
+
 function saveData() {
-  // Protezione: non salvare se i turni sono vuoti (dati non ancora caricati)
-  if (!appData.shifts || Object.keys(appData.shifts).length === 0) {
-    console.warn('saveData bloccato: dati non ancora caricati');
+  // Protezione FORTE: non salvare mai se i dati non sono stati caricati da Firebase
+  if (!_dataLoadedFromFirebase) {
+    console.warn('saveData bloccato: Firebase non ancora caricato');
     return;
   }
   localStorage.setItem('nursehift_data_v2', JSON.stringify(appData));
   setSyncStatus('syncing'); clearTimeout(saveTimeout);
-  saveTimeout = setTimeout(async () => { try { await setDoc(DOC_REF, appData); setSyncStatus('synced'); } catch(e) { setSyncStatus('error'); } }, 800);
+  saveTimeout = setTimeout(async () => {
+    try {
+      // Doppia protezione: leggi prima, scrivi solo se doc esiste o appData ha dati
+      await setDoc(DOC_REF, appData);
+      setSyncStatus('synced');
+    } catch(e) { setSyncStatus('error'); }
+  }, 800);
 }
 
 /* ── PROMEMORIA ── */
@@ -723,6 +750,20 @@ function applyTheme() { document.documentElement.setAttribute('data-theme', isDa
 applyTheme();
 document.getElementById('themeBtn').addEventListener('click', ()=>{ isDark=!isDark; applyTheme(); });
 
+// Tirocinio mode toggle
+document.getElementById('tirocinoToggleBtn').addEventListener('click', () => {
+  tirocinoMode = !tirocinoMode;
+  const btn = document.getElementById('tirocinoToggleBtn');
+  btn.style.background = tirocinoMode ? 'var(--cat-t-bg)' : 'var(--surface2)';
+  btn.style.borderColor = tirocinoMode ? 'var(--cat-t)' : 'var(--border)';
+  document.getElementById('tirocinoSection').style.display = tirocinoMode ? 'block' : 'none';
+  document.getElementById('riepilogoTirocinoSection').style.display = tirocinoMode ? 'block' : 'none';
+  // Re-render panel if open
+  if(selectedDateKey) { renderPanelNotes(selectedDateKey); }
+  renderCalendar();
+  document.querySelectorAll('.legend-tirocinio').forEach(el => el.style.display = tirocinoMode ? '' : 'none');
+});
+
 /* ── UTILS ── */
 function dateKey(y,m,d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
 function parseDateKey(key) { const [y,m,d]=key.split('-').map(Number); return {year:y,month:m-1,day:d}; }
@@ -742,12 +783,12 @@ function renderCalendar() {
     const key=dateKey(y,mo,d), shift=appData.shifts[key]||null, ua=appData.uscitaActive[key]||false;
     const hasRem=reminders.some(r=>r.date===key&&r.active);
     // Badge categorie
-    const catBadges = CATS.filter(cat => (appData.categoryNotes?.[key]?.[cat.id]||[]).length > 0)
+    const catBadges = CATS.filter(cat => (appData.categoryNotes?.[key]?.[cat.id]||[]).length > 0 && (!cat.tirocinio || tirocinoMode))
       .map(cat => `<div class="day-badge day-badge-cat" style="background:${cat.bg};color:${cat.color}">${cat.badge}</div>`).join('');
     const hasContent = catBadges.length > 0 || ua || hasRem;
     const el=document.createElement('div');
-    el.className='cal-day'+(shift?` shift-${shift}`:(hasContent?' has-content':''))+( key===todayKey?' today':'')+( key===selectedDateKey?' selected':'');
-    el.innerHTML=`<div class="day-num">${d}</div>${shift?`<div class="day-shift-label">${shift}</div>`:''}<div class="day-indicators">${catBadges}${ua?'<div class="day-badge day-badge-uscita">U</div>':''}${hasRem?'<div class="day-badge day-badge-rem">🔔</div>':''}</div>`;
+    el.className='cal-day'+(shift&&tirocinoMode?` shift-${shift}`:(hasContent?' has-content':''))+( key===todayKey?' today':'')+( key===selectedDateKey?' selected':'');
+    el.innerHTML=`<div class="day-num">${d}</div>${shift&&tirocinoMode?`<div class="day-shift-label">${shift}</div>`:''}<div class="day-indicators">${catBadges}${ua?'<div class="day-badge day-badge-uscita">U</div>':''}${hasRem?'<div class="day-badge day-badge-rem">🔔</div>':''}</div>`;
     el.addEventListener('click',()=>openPanel(key)); container.appendChild(el);
   }
   renderStats(); renderUsciteElenco(); renderNextShift(); renderCatCard();
@@ -762,17 +803,27 @@ function renderStats() {
   document.getElementById('monthBar').innerHTML=Object.entries(counts).map(([s,c])=>c>0?`<div class="month-bar-seg" style="flex:${c};background:${colors[s]}"></div>`:'').join('');
 }
 
+let usciteTab = 'future';
 function renderUsciteElenco() {
   const today=new Date(), todayKey=dateKey(today.getFullYear(),today.getMonth(),today.getDate());
   const bgC={M:'var(--M-bg)',P:'var(--P-bg)',N:'var(--N-bg)',SN:'var(--SN-bg)',R:'var(--R-bg)'}, fgC={M:'var(--M)',P:'var(--P)',N:'var(--N)',SN:'var(--SN)',R:'var(--R)'};
   const keys=Object.keys(appData.uscitaActive||{}).filter(k=>appData.uscitaActive[k]).sort();
   const countEl=document.getElementById('usciteCount'), container=document.getElementById('usciteElenco');
-  if(!keys.length){countEl.textContent='';container.innerHTML='<div class="uscita-empty">Nessuna uscita programmata</div>';return;}
-  const future=keys.filter(k=>k>=todayKey), past=keys.filter(k=>k<todayKey);
+  const future=keys.filter(k=>k>=todayKey), past=keys.filter(k=>k<todayKey).reverse();
   countEl.textContent=`${future.length} future · ${past.length} passate`;
-  const renderItem=(k,isPast)=>{const {year,month,day}=parseDateKey(k),shift=appData.shifts[k]||null,notes=appData.uscite[k]||[],dow=DAYS_IT[getDOW(year,month,day)],notesHTML=notes.map((n,i)=>`<div class="uscita-note-row"><span class="uscita-note-text">• ${escapeHTML(n)}</span><button class="uscita-note-del" onclick="window._delUscitaNote('${k}',${i})">✕</button></div>`).join('');return `<div class="uscita-item ${isPast?'passata':''}"><div class="uscita-item-header"><div class="uscita-item-date">🚗 ${dow} ${day} ${MONTHS[month]}</div>${shift?`<span class="uscita-item-shift" style="background:${bgC[shift]};color:${fgC[shift]}">${SHIFT_ICONS[shift]} ${shift}</span>`:''}<span class="uscita-item-tag${isPast?' passata-tag':''}">${isPast?'Passata':'In programma'}</span></div>${notes.length?`<div class="uscita-note-list">${notesHTML}</div>`:''}<div class="uscita-add-row"><input class="note-input" type="text" placeholder="Aggiungi nota uscita…" id="uscita-input-${k}" onkeydown="if(event.key==='Enter') window._addUscitaNoteFromElenco('${k}')"><button class="add-btn" style="background:var(--P);flex-shrink:0;" onclick="window._addUscitaNoteFromElenco('${k}')">+</button></div></div>`;};
-  container.innerHTML=future.map(k=>renderItem(k,false)).join('')+(past.length?`<div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;margin:10px 0 6px;">Passate</div>`+past.map(k=>renderItem(k,true)).join(''):'');
+  const renderItem=(k,isPast)=>{const {year,month,day}=parseDateKey(k),shift=appData.shifts[k]||null,notes=appData.uscite[k]||[],dow=DAYS_IT[getDOW(year,month,day)],notesHTML=notes.map((n,i)=>`<div class="uscita-note-row"><span class="uscita-note-text">• ${escapeHTML(n)}</span><button class="uscita-note-del" onclick="window._delUscitaNote('${k}',${i})">✕</button></div>`).join('');return `<div class="uscita-item ${isPast?'passata':''}"><div class="uscita-item-header"><div class="uscita-item-date">🚗 ${dow} ${day} ${MONTHS[month]}</div>${shift&&tirocinoMode?`<span class="uscita-item-shift" style="background:${bgC[shift]};color:${fgC[shift]}">${SHIFT_ICONS[shift]} ${shift}</span>`:''}<span class="uscita-item-tag${isPast?' passata-tag':''}">${isPast?'Passata':'In programma'}</span></div>${notes.length?`<div class="uscita-note-list">${notesHTML}</div>`:''}<div class="uscita-add-row"><input class="note-input" type="text" placeholder="Aggiungi nota uscita…" id="uscita-input-${k}" onkeydown="if(event.key==='Enter') window._addUscitaNoteFromElenco('${k}')"><button class="add-btn" style="background:var(--P);flex-shrink:0;" onclick="window._addUscitaNoteFromElenco('${k}')">+</button></div></div>`;};
+  if(!keys.length){container.innerHTML='<div class="uscita-empty">Nessuna uscita programmata</div>';return;}
+  const tabs = `<div class="uscite-tabs">
+    <button class="uscite-tab ${usciteTab==='future'?'active':''}" onclick="window._switchUsciteTab('future')">🗓 Future (${future.length})</button>
+    <button class="uscite-tab ${usciteTab==='passate'?'active':''}" onclick="window._switchUsciteTab('passate')">📁 Passate (${past.length})</button>
+  </div>`;
+  if(usciteTab==='future'){
+    container.innerHTML=tabs+(future.length?future.map(k=>renderItem(k,false)).join(''):'<div class="uscita-empty">Nessuna uscita futura</div>');
+  } else {
+    container.innerHTML=tabs+`<div class="uscite-passate-list">${past.length?past.map(k=>renderItem(k,true)).join(''):'<div class="uscita-empty" style="padding:16px">Nessuna uscita passata</div>'}</div>`;
+  }
 }
+window._switchUsciteTab = function(tab) { usciteTab=tab; renderUsciteElenco(); };
 window._delUscitaNote=function(key,i){if(!appData.uscite[key])return;appData.uscite[key].splice(i,1);saveData();renderUsciteElenco();};
 window._addUscitaNoteFromElenco=function(key){const inp=document.getElementById(`uscita-input-${key}`);if(!inp)return;const t=inp.value.trim();if(!t)return;if(!appData.uscite[key])appData.uscite[key]=[];appData.uscite[key].push(t);inp.value='';saveData();renderUsciteElenco();};
 
@@ -820,15 +871,16 @@ window._setShift=function(s){if(!selectedDateKey)return;appData.shifts[selectedD
 
 /* ── CATEGORIE ── */
 const CATS = [
-  { id:'altro',   label:'📝 Altro',           badge:'A',  color:'var(--cat-altro)',  bg:'var(--cat-altro-bg)',  light:'var(--cat-altro-light)'  },
-  { id:'eb',      label:'👦🏽 Esami Bimbo',     badge:'EB', color:'var(--cat-eb)',     bg:'var(--cat-eb-bg)',     light:'var(--cat-eb-light)'     },
-  { id:'eg',      label:'👧🏽 Esami Bimba',     badge:'EG', color:'var(--cat-eg)',     bg:'var(--cat-eg-bg)',     light:'var(--cat-eg-light)'     },
-  { id:'t',       label:'🏥 Tirocinio',  badge:'T',  color:'var(--cat-t)',      bg:'var(--cat-t-bg)',      light:'var(--cat-t-light)'      },
-  { id:'v',       label:'🌴 Vacanze',          badge:'V',  color:'var(--cat-v)',      bg:'var(--cat-v-bg)',      light:'var(--cat-v-light)'      },
-  { id:'mi',      label:'🎯 Missione',         badge:'Mi', color:'var(--cat-mi)',     bg:'var(--cat-mi-bg)',     light:'var(--cat-mi-light)'     },
+  { id:'eb',      label:'👦🏽 Esami Bimbo',     badge:'EB', color:'var(--cat-eb)',     bg:'var(--cat-eb-bg)',     light:'var(--cat-eb-light)',    tirocinio:false },
+  { id:'eg',      label:'👧🏽 Esami Bimba',     badge:'EG', color:'var(--cat-eg)',     bg:'var(--cat-eg-bg)',     light:'var(--cat-eg-light)',    tirocinio:false },
+  { id:'v',       label:'🌴 Vacanze',          badge:'V',  color:'var(--cat-v)',      bg:'var(--cat-v-bg)',      light:'var(--cat-v-light)',     tirocinio:false },
+  { id:'mi',      label:'🎯 Missione',         badge:'M',  color:'var(--cat-mi)',     bg:'var(--cat-mi-bg)',     light:'var(--cat-mi-light)',    tirocinio:false },
+  { id:'t',       label:'🏥 Tirocinio',        badge:'T',  color:'var(--cat-t)',      bg:'var(--cat-t-bg)',      light:'var(--cat-t-light)',     tirocinio:true  },
+  { id:'altro',   label:'📝 Altro',            badge:'A',  color:'var(--cat-altro)',  bg:'var(--cat-altro-bg)',  light:'var(--cat-altro-light)', tirocinio:false },
 ];
 
-let activeCatTab = 'altro';
+let activeCatTab = 'eb';
+let tirocinoMode = false;
 
 function getCatNotes(key, catId) {
   return (appData.categoryNotes && appData.categoryNotes[key] && appData.categoryNotes[key][catId]) || [];
@@ -836,7 +888,7 @@ function getCatNotes(key, catId) {
 
 function renderPanelNotes(key) {
   const container = document.getElementById('catSections');
-  container.innerHTML = CATS.map(cat => {
+  container.innerHTML = CATS.filter(cat => !cat.tirocinio || tirocinoMode).map(cat => {
     const notes = getCatNotes(key, cat.id);
     const notesHTML = notes.map((n,i) => `<div class="note-item"><span class="note-text">${escapeHTML(n)}</span><button class="note-del" onclick="window._deleteCatNote('${cat.id}',${i})">✕</button></div>`).join('');
     return `<div class="cat-section" id="cat-section-${cat.id}">
@@ -926,7 +978,9 @@ function renderCatCard() {
   // Tabs
   tabsEl.innerHTML = CATS.map(cat => {
     const hasNotes = appData.categoryNotes && Object.keys(appData.categoryNotes).some(k => k >= todayStr && (appData.categoryNotes[k][cat.id]||[]).length > 0);
-    return `<button class="cat-tab ${activeCatTab===cat.id?'active':''}" style="color:${cat.color};${activeCatTab===cat.id?`border-color:${cat.color};background:${cat.bg};`:''}" onclick="window._selectCatTab('${cat.id}')">${cat.badge} ${cat.label.replace(/^[^\s]+ /,'')}</button>`;
+    if(cat.tirocinio && !tirocinoMode) return '';
+    const shortName = cat.label.replace(/^\S+ /, '');
+    return `<button class="cat-tab ${activeCatTab===cat.id?'active':''}" style="color:${cat.color};${activeCatTab===cat.id?`border-color:${cat.color};background:${cat.bg};`:''}" onclick="window._selectCatTab('${cat.id}')">${shortName}</button>`;
   }).join('');
 
   // Entries per tab attivo
