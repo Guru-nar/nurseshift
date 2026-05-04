@@ -592,7 +592,7 @@ const firebaseConfig = {
 
 const fireApp = initializeApp(firebaseConfig);
 const db = getFirestore(fireApp);
-const DOC_REF = doc(db, "users", "Santushta_Kumari");
+const DOC_REF = doc(db, "users", "SyncIn");
 const VAPID_PUBLIC = "BBtV3V7RBogdcy9tm7qNxx5WjitODo-Hy9j1WX9fX4wdgMbym8-gVk11qA_PqXzbQITvXgTDaG6CfIHkcoySQTU";
 
 /* ── WEB PUSH ── */
@@ -619,7 +619,7 @@ async function registerWebPush() {
     if (!sub) {
       sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC) });
     }
-    const subRef = doc(db, 'webpush_subscriptions', 'Santushta_Kumari');
+    const subRef = doc(db, 'webpush_subscriptions', 'SyncIn');
     const snap = await getDoc(subRef);
     const subs = snap.exists() ? (snap.data().subscriptions || []) : [];
     const subJson = JSON.stringify(sub.toJSON());
